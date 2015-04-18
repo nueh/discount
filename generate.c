@@ -1077,6 +1077,7 @@ maybe_autolink(MMIOT *f)
 
 
 /* smartyquote code that's common for single and double quotes
+   german single and double quotes
  */
 static int
 smartyquote(int *flags, char typeofquote, MMIOT *f)
@@ -1085,15 +1086,24 @@ smartyquote(int *flags, char typeofquote, MMIOT *f)
 
     if ( bit & (*flags) ) {
 	if ( isthisnonword(f,1) ) {
-	    Qprintf(f, "&r%cquo;", typeofquote);
+	    Qprintf(f, "&l%cquo;", typeofquote);
 	    (*flags) &= ~bit;
 	    return 1;
 	}
     }
     else if ( isthisnonword(f,-1) && peek(f,1) != EOF ) {
-	Qprintf(f, "&l%cquo;", typeofquote);
-	(*flags) |= bit;
-	return 1;
+			if (typeofquote == 's')
+			{
+	      Qprintf(f, "&sbquo;");
+	      (*flags) |= bit;
+	      return 1;
+			}
+			else
+			{
+	      Qprintf(f, "&bdquo;");
+	      (*flags) |= bit;
+	      return 1;
+			}
     }
     return 0;
 }
